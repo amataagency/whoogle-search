@@ -17,8 +17,15 @@ def test_search(client):
 
 
 def test_feeling_lucky(client):
-    rv = client.get(f'/{Endpoint.search}?q=!%20test')
+    # Bang at beginning of query
+    rv = client.get(f'/{Endpoint.search}?q=!%20wikipedia')
     assert rv._status_code == 303
+    assert rv.headers.get('Location').startswith('https://www.wikipedia.org')
+
+    # Move bang to end of query
+    rv = client.get(f'/{Endpoint.search}?q=github%20!')
+    assert rv._status_code == 303
+    assert rv.headers.get('Location').startswith('https://github.com')
 
 
 def test_ddg_bang(client):
@@ -46,6 +53,13 @@ def test_ddg_bang(client):
     rv = client.get(f'/{Endpoint.search}?q=!gh')
     assert rv._status_code == 302
     assert rv.headers.get('Location').startswith('https://github.com')
+
+
+def test_custom_bang(client):
+    # Bang at beginning of query
+    rv = client.get(f'/{Endpoint.search}?q=!i%20whoogle')
+    assert rv._status_code == 302
+    assert rv.headers.get('Location').startswith('search?q=')
 
 
 def test_config(client):

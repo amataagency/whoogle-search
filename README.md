@@ -20,6 +20,7 @@ Contents
 1. [Features](#features)
 3. [Install/Deploy Options](#install)
     1. [Heroku Quick Deploy](#heroku-quick-deploy)
+    1. [Render.com](#render)
     1. [Repl.it](#replit)
     1. [Fly.io](#flyio)
     1. [Koyeb](#koyeb)
@@ -34,6 +35,7 @@ Contents
 6. [Extra Steps](#extra-steps)
     1. [Set Primary Search Engine](#set-whoogle-as-your-primary-search-engine)
 	2. [Custom Redirecting](#custom-redirecting)
+	2. [Custom Bangs](#custom-bangs)
     3. [Prevent Downtime (Heroku Only)](#prevent-downtime-heroku-only)
     4. [Manual HTTPS Enforcement](#https-enforcement)
     5. [Using with Firefox Containers](#using-with-firefox-containers)
@@ -60,6 +62,7 @@ Contents
 - Randomly generated User Agent
 - Easy to install/deploy
 - DDG-style bang (i.e. `!<tag> <query>`) searches
+- User-defined [custom bangs](#custom-bangs)
 - Optional location-based searching (i.e. results near \<city\>)
 - Optional NoJS mode to view search results in a separate window with JavaScript blocked
 
@@ -84,6 +87,16 @@ Provides:
 Notes:
 - Requires a **PAID** Heroku Account.
 - Sometimes has issues with auto-redirecting to `https`. Make sure to navigate to the `https` version of your app before adding as a default search engine.
+
+___
+
+### [Render](https://render.com)
+
+Create an account on [render.com](https://render.com) and import the Whoogle repo with the following settings:
+
+- Runtime: `Python 3`
+- Build Command: `pip install -r requirements.txt`
+- Run Command: `./run`
 
 ___
 
@@ -528,6 +541,14 @@ WHOOGLE_REDIRECTS="badA.com:goodA.com,badB.com:goodB.com"
 
 NOTE: Do not include "http(s)://" when defining your redirect.
 
+### Custom Bangs
+You can create your own custom bangs. By default, bangs are stored in 
+`app/static/bangs`. See [`00-whoogle.json`](https://github.com/benbusby/whoogle-search/blob/main/app/static/bangs/00-whoogle.json)
+for an example. These are parsed in alphabetical order with later files
+overriding bangs set in earlier files, with the exception that DDG bangs
+(downloaded to `app/static/bangs/bangs.json`) are always parsed first. Thus,
+any custom bangs will always override the DDG ones.
+
 ### Prevent Downtime (Heroku only)
 Part of the deal with Heroku's free tier is that you're allocated 550 hours/month (meaning it can't stay active 24/7), and the app is temporarily shut down after 30 minutes of inactivity. Once it becomes inactive, any Whoogle searches will still work, but it'll take an extra 10-15 seconds for the app to come back online before displaying the result, which can be frustrating if you're in a hurry.
 
@@ -671,6 +692,7 @@ A lot of the app currently piggybacks on Google's existing support for fetching 
 | [https://whoogle.datura.network](https://whoogle.datura.network) | 🇩🇪 DE | Multi-choice | |
 | [https://whoogle.yepserver.xyz](https://whoogle.yepserver.xyz) | 🇺🇦 UA | Multi-choice | |
 | [https://search.nezumi.party](https://search.nezumi.party) | 🇮🇹 IT | Multi-choice | |
+| [https://search.snine.nl](https://search.snine.nl) | 🇳🇱 NL | Mult-choice | ✅ |
 
 
 * A checkmark in the "Cloudflare" category here refers to the use of the reverse proxy, [Cloudflare](https://cloudflare.com). The checkmark will not be listed for a site which uses Cloudflare DNS but rather the proxying service which grants Cloudflare the ability to monitor traffic to the website.
